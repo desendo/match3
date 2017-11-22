@@ -1,0 +1,15 @@
+{ 
+    "main" : "game.js",
+    "license" : "ISC",
+    "description" : "simple match 3 game",
+    "repository" :
+    {
+      "type" : "git",
+      "url" : "https://github.com/desendo/match3.git"
+    },
+    "name": "match-3",
+    "version": "0.2.1",
+    "dependencies": {
+	"pixi.js": "~4.6.0"
+    }
+}
