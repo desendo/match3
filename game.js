@@ -1,4 +1,4 @@
-
+console.log("s");
 Level = {};
 
 Level.ShapeTypes = [
@@ -6,8 +6,8 @@ Level.ShapeTypes = [
 
     {name: 'square',points:10},
     {name: 'triangle',points:20},
-   //{name: 'cloud',points:10},
-   //{name: 'star',points:10},
+    //{name: 'cloud',points:10},
+  //  {name: 'star',points:10},
 ];
 Level.Field = {
     cellsByX: 9,
@@ -102,6 +102,11 @@ function create() {
 
 }
 
+
+var timeoutToAdd = 0;
+var timeoutToShift = 0;
+var shouldShift = false;
+var shouldAdd = false;
 function update() {
     app.renderer.render(app.stage);
     requestAnimationFrame(update);
@@ -113,9 +118,33 @@ function update() {
     if(matches.length>0)
     {
         removeMatches();
-        fillEmptyCells();
-        findMatches();
+        shouldShift = true;
     }
+    if (shouldShift)
+    {
+        timeoutToShift+=1;
+        if(timeoutToShift>10)
+        {
+            shiftToBottom();
+            shouldAdd = true;
+            shouldShift = false;
+            timeoutToShift=0;
+            findMatches();
+        }
+    }
+    if (shouldAdd)
+    {
+        timeoutToAdd+=1;
+        if(timeoutToAdd>10)
+        {
+            addNewShapes();
+            shouldAdd = false;
+            timeoutToAdd = 0;
+            findMatches();
+        }
+    }
+
+
     else
         initShapesCoordinates();
 
@@ -384,9 +413,9 @@ function shiftToBottom(){
 
     for  (var x=0; x<Level.Field.cellsByX; x++) {
         if( cells[x].emptyCellsCount>0)
-            for ( var y=Level.Field.cellsByY-1; y!=0; --y) {
+            for ( var y=Level.Field.cellsByY; y>0; y--) {
 
-                    shiftToBottomShape(x,y);
+                    shiftToBottomShape(x,y-1);
 
             }
         }
@@ -402,6 +431,7 @@ function shiftToBottomShape(x, y){
             cells[x][y].shape.yCoord++;
             cells[x][y+1].shape=cells[x][y].shape;
             cells[x][y].shape=null;
+            console.log("shift", x,y);
 
         }
         y++;
